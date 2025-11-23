@@ -35,12 +35,15 @@ fn cart_lines_discounts_generate_run(
         .iter()
         .filter_map(|line| {
             // Check if this is a CUSTOM-FRAME-DIGITAL line
-            let sku = line.merchandise()?.sku()?;
+            use schema::cart_lines_discounts_generate_run::input::cart::lines::Merchandise;
+            let sku = match line.merchandise() {
+                Merchandise::ProductVariant(variant) => variant.sku()?,
+                _ => return None,
+            };
+
             if sku == "CUSTOM-FRAME-DIGITAL" {
-                // Find the _frame_spec_number attribute
-                line.attributes()
-                    .iter()
-                    .find(|attr| attr.key() == "_frame_spec_number")
+                // Get the _frame_spec_number attribute
+                line.frame_spec_number()
                     .and_then(|attr| attr.value())
                     .map(|v| v.to_string())
             } else {
@@ -53,9 +56,13 @@ fn cart_lines_discounts_generate_run(
     let mut discount_targets = vec![];
 
     for line in cart_lines.iter() {
-        let sku = match line.merchandise().and_then(|m| m.sku()) {
-            Some(s) => s,
-            None => continue,
+        use schema::cart_lines_discounts_generate_run::input::cart::lines::Merchandise;
+        let sku = match line.merchandise() {
+            Merchandise::ProductVariant(variant) => match variant.sku() {
+                Some(s) => s,
+                None => continue,
+            },
+            _ => continue,
         };
 
         let should_discount = match sku.as_str() {
@@ -65,9 +72,7 @@ fn cart_lines_discounts_generate_run(
             }
             "CUSTOM-FRAME-ADDITION" => {
                 // Only discount if parent is a digital frame
-                line.attributes()
-                    .iter()
-                    .find(|attr| attr.key() == "_parent_design")
+                line.parent_design()
                     .and_then(|attr| attr.value())
                     .map(|parent_design| digital_frame_specs.contains(parent_design))
                     .unwrap_or(false)
