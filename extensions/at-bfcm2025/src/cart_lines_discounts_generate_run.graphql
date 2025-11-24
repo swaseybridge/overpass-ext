@@ -7,6 +7,18 @@ query Input {
           amount
         }
       }
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          sku
+        }
+      }
+      frameSpecNumber: attribute(key: "_frame_spec_number") {
+        value
+      }
+      parentDesign: attribute(key: "_parent_design") {
+        value
+      }
     }
   }
   discount {

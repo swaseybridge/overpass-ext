@@ -118,7 +118,9 @@ fn cart_lines_discounts_generate_run(
                 value: ProductDiscountCandidateValue::Percentage(Percentage {
                     value: Decimal(5.0),
                 }),
-                associated_discount_code: Some("ARTISTTRADE5".to_string()),
+                associated_discount_code: Some(schema::AssociatedDiscountCode {
+                    code: "ARTISTTRADE5".to_string(),
+                }),
             }],
         },
     )];
