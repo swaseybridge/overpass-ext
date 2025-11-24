@@ -2,9 +2,9 @@ api_version = "2025-04"
 
 [[extensions]]
 name = "t:name"
-handle = "bfcm2025"
+handle = "at-bfcm2025"
 type = "function"
-uid = "11a5a5aa-5d05-aab5-1e00-eb38a16723fec5f297ad"
+uid = "9b6cf006-b4e5-b49a-ac08-589d6a5e259035bb058a"
 description = "t:description"
 
   [[extensions.targeting]]
@@ -14,5 +14,5 @@ description = "t:description"
 
   [extensions.build]
   command = "cargo build --target=wasm32-unknown-unknown --release"
-  path = "target/wasm32-unknown-unknown/release/bfcm2025.wasm"
+  path = "target/wasm32-unknown-unknown/release/at-bfcm2025.wasm"
   watch = [ "src/**/*.rs" ]
